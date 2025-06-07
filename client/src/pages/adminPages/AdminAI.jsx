@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card, Spinner, Alert } from 'react-bootstrap';
-import { FaRobot, FaUser, FaPaperPlane, FaTrash } from 'react-icons/fa';
+import { FaRobot, FaUser, FaPaperPlane, FaTrash, FaCopy, FaCheck } from 'react-icons/fa';
+import { FcAssistant } from 'react-icons/fc';
 import AdminNavBar from '../../components/common/adminComponents/adminNavbar';
 import axios from 'axios';
 import '../../assets/styles/AdminAI.css';
@@ -10,6 +11,7 @@ function AdminAI() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [copiedIndex, setCopiedIndex] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -26,6 +28,29 @@ function AdminAI() {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  const exampleQueries = [
+    "Show items with price between $500 and $1000",
+    "Show me top 2 best-selling products",
+    "How many orders were placed today?",
+    "List products added in the last 30 days",
+    "What's the average order value?",
+  ];
+
+  const copyToClipboard = async (text, index) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
+  const handleExampleClick = (query) => {
+    setInputMessage(query);
+    inputRef.current?.focus();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,7 +127,7 @@ function AdminAI() {
         {/* Header */}
         <div className="ai-header">
           <div className="header-content">
-            <FaRobot size={30} className="ai-icon" />
+            <FcAssistant size={35} className="ai-icon" />
             <h2 className="ai-title">AI Assistant</h2>
           </div>
           {messages.length > 0 && (
@@ -133,19 +158,37 @@ function AdminAI() {
               <div className="messages-container">
                 {messages.length === 0 ? (
                   <div className="welcome-message">
-                    <FaRobot size={48} className="welcome-icon" />
-                    <h4>Welcome to AI Assistant</h4>
-                    <p className="text-muted">
+                    <FcAssistant size={64} className="welcome-icon" />
+                    <p className="welcome-description">
                       Ask me anything about your store data, transactions, inventory, or customers.
-                      I can help you analyze trends, generate reports, and provide insights.
                     </p>
                     <div className="example-queries">
-                      <small className="text-muted">Try asking:</small>
-                      <ul className="example-list">
-                        <li>"Show me sales trends for this month"</li>
-                        <li>"Which products are running low on stock?"</li>
-                        <li>"What are the top-selling categories?"</li>
-                      </ul>
+                      <h6 className="example-title">Try asking:</h6>
+                      <div className="example-grid">
+                        {exampleQueries.map((query, index) => (
+                          <div key={index} className="example-item">
+                            <div 
+                              className="example-text"
+                              onClick={() => handleExampleClick(query)}
+                            >
+                              "{query}"
+                            </div>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="copy-btn"
+                              onClick={() => copyToClipboard(query, index)}
+                              title="Copy to clipboard"
+                            >
+                              {copiedIndex === index ? (
+                                <FaCheck className="copy-icon success" />
+                              ) : (
+                                <FaCopy className="copy-icon" />
+                              )}
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -156,7 +199,7 @@ function AdminAI() {
                           {message.type === 'user' ? (
                             <FaUser className="user-avatar" />
                           ) : (
-                            <FaRobot className={`ai-avatar ${message.status === 'error' ? 'error' : ''}`} />
+                            <FcAssistant className="ai-avatar-icon" />
                           )}
                         </div>
                         <div className="message-content">
@@ -174,7 +217,7 @@ function AdminAI() {
                     {isLoading && (
                       <div className="message ai-message">
                         <div className="message-avatar">
-                          <FaRobot className="ai-avatar" />
+                          <FcAssistant className="ai-avatar-icon" />
                         </div>
                         <div className="message-content">
                           <div className="message-bubble ai-bubble loading-bubble">
