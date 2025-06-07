@@ -32,6 +32,7 @@ function AdminNavbar() {
                       <Nav.Link onClick={() => navigate("/admin/transactions")}>Store Transactions</Nav.Link>
                       <Nav.Link onClick={() => navigate("/admin/addProduct")}>Add new product</Nav.Link>
                       <Nav.Link onClick={() => navigate("/admin/management/users")}>Manage Customer Details</Nav.Link>
+                      <Nav.Link onClick={() => navigate("/admin/ai")}>AI Supported QnA</Nav.Link>
                     </Nav>
                   </Offcanvas.Body>
                 </Navbar.Offcanvas>

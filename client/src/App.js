@@ -14,6 +14,7 @@ import { fetchInventory } from './features/catalog';
 import AdminManageUsers from './pages/adminPages/AdminManageUsers';
 import ProfilePage from './pages/customerPages/ProfilePage';
 import CheckoutSummary from './pages/customerPages/CheckoutSummary';
+import AdminAI from './pages/adminPages/AdminAI';
 //import UpdateProduct from '../src/pages/adminPages/UpdateProduct';
 const App = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,8 @@ const App = () => {
           <Route path="/admin/transactions" element={<AdminTransactionPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/admin/management/users" element={<AdminManageUsers />} />
+          <Route path="/admin/ai" element={<AdminAI />} />
+
         </Routes>
       </Suspense>
     </Router>
